@@ -14,7 +14,7 @@
 - [x] 所有权（Ownership）
 - [x] 借用与引用（& / &mut）
 - [x] 函数传参与所有权
-- [ ] 结构体（Struct）← **下次从这里继续**
+- [~] 结构体（Struct）← **学到一半，下次继续**
 - [ ] 枚举（Enum）
 - [ ] 模式匹配（match）
 - [ ] 错误处理（Result / Option）
@@ -208,6 +208,28 @@ greet(name)       // 转移所有权，name 死了
 greet(&name)      // 不可变借用，name 还活着
 greet(&mut name)  // 可变借用，name 还活着，函数内可以修改
 ```
+
+## 结构体（Struct）—— 学习中
+
+```rust
+struct Student {
+    name: String,
+    age: i32,
+    score: f64,
+}
+
+impl Student {
+    fn introduce(&self) { ... }       // 借来看看
+    fn set_score(&mut self, s: f64) { ... }  // 借来改改
+}
+```
+
+- struct 类似 TS 的 interface + 对象，但是实实在在的数据结构，编译器按它分配内存
+- `impl` 块给 struct 加方法（不用 class）
+- `&self` = this + 不可变借用，`&mut self` = this + 可变借用
+- **mut 是全有或全无**：不能只让某个字段可变，要么整个 struct 可变，要么整个不可变
+- 已学：定义 struct、创建实例、访问字段、impl 方法（&self / &mut self）
+- 未学：关联函数（类似静态方法）、结构体与所有权的更多交互
 
 ## 遇到的坑
 
