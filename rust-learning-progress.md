@@ -14,7 +14,7 @@
 - [x] 所有权（Ownership）
 - [x] 借用与引用（& / &mut）
 - [x] 函数传参与所有权
-- [~] 结构体（Struct）← **学到一半，下次继续**
+- [x] 结构体（Struct）
 - [ ] 枚举（Enum）
 - [ ] 模式匹配（match）
 - [ ] 错误处理（Result / Option）
@@ -228,8 +228,11 @@ impl Student {
 - `impl` 块给 struct 加方法（不用 class）
 - `&self` = this + 不可变借用，`&mut self` = this + 可变借用
 - **mut 是全有或全无**：不能只让某个字段可变，要么整个 struct 可变，要么整个不可变
-- 已学：定义 struct、创建实例、访问字段、impl 方法（&self / &mut self）
-- 未学：关联函数（类似静态方法）、结构体与所有权的更多交互
+- 已学：定义 struct、创建实例、访问字段、impl 方法（&self / &mut self）、关联函数（`::` 调用）、结构体字段的所有权
+- 关联函数：`impl` 块中没有 `self` 参数的函数，用 `Student::new()` 调用，常用于构造函数
+- `new` 不是关键字，是社区约定的构造函数名
+- 结构体字段所有权：String 字段可以被单独搬走（`let name = s.name`），i32 等简单类型自动复制
+- 便宜的操作（复制 i32）隐式做，贵的操作（复制 String）必须显式 `.clone()`
 
 ## 遇到的坑
 
