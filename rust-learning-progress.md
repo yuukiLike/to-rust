@@ -15,9 +15,40 @@
 - [x] 借用与引用（& / &mut）
 - [x] 函数传参与所有权
 - [x] 结构体（Struct）
-- [ ] 枚举（Enum）
-- [ ] 模式匹配（match）
-- [ ] 错误处理（Result / Option）
+- [x] 枚举（Enum）
+- [x] 模式匹配（match）
+- [ ] 错误处理（Result / Option）——Option 已学完，Result 刚开头
+
+## Option
+
+```rust
+enum Option<T> {
+    Some(T),    // 有值
+    None,       // 没有值
+}
+```
+
+- Option 是"可能没有值"的盒子，Rust 版的 null 安全方案
+- JS 用 `undefined/null` 表示没有，容易忘记检查；Rust 用 Option 包起来，逼你先拆盒子
+- `vec.get(i)` 返回 Option，安全；`vec[i]` 直接取，越界就 panic
+- 三种拆法：
+  - `match` —— 最安全，两种情况都处理
+  - `if let Some(v) = ...` —— 只关心有值的情况
+  - `.unwrap()` —— 暴力拆，None 就 panic，只在 100% 确定有值时用
+- 设计哲学：**把运行时错误提前到编译时解决**
+- Option 不能直接当值用（不能直接 println），必须拆开
+
+## Result（刚开始）
+
+```rust
+enum Result<T, E> {
+    Ok(T),     // 成功
+    Err(E),    // 失败，带错误信息
+}
+```
+
+- Option 是"有没有值"，Result 是"成功还是失败"
+- 下次从 `"42".parse()` 的例子继续
 
 ---
 
@@ -209,7 +240,7 @@ greet(&name)      // 不可变借用，name 还活着
 greet(&mut name)  // 可变借用，name 还活着，函数内可以修改
 ```
 
-## 结构体（Struct）—— 学习中
+## 结构体（Struct）
 
 ```rust
 struct Student {
@@ -234,6 +265,40 @@ impl Student {
 - 结构体字段所有权：String 字段可以被单独搬走（`let name = s.name`），i32 等简单类型自动复制
 - 便宜的操作（复制 i32）隐式做，贵的操作（复制 String）必须显式 `.clone()`
 
+## 枚举（Enum）
+
+```rust
+#[derive(Debug)]
+enum Message {
+    Quit,                      // 不带数据
+    Say(String),               // 带数据，无字段名
+    Move { x: i32, y: i32 },  // 带数据，有字段名（像内嵌 struct）
+}
+```
+
+- enum 定义"或"的关系：值只能是其中一种变体
+- struct 是"且"（同时拥有所有字段），enum 是"或"（只能是其中一种）
+- 每个变体可以携带不同类型、不同数量的数据
+- Rust 的 enum 更接近 TS 的联合类型（union type），不是 TS 的 enum
+- TS 的 enum 只能是 string 或 number，Rust 的 enum 变体可以携带任意数据
+- `#[derive(Debug)]` 让 enum 支持 `{:?}` 调试打印
+- 核心价值：让非法状态无法表达（make illegal states unrepresentable）
+
+## 模式匹配（match）
+
+```rust
+match msg {
+    Message::Quit => println!("退出"),
+    Message::Say(text) => println!("说了: {}", text),
+    Message::Move { x, y } => println!("移动到: ({}, {})", x, y),
+}
+```
+
+- match 类似 switch，但强制处理所有变体，漏一个编译不过
+- 匹配的同时取出变体内的数据（switch 做不到）
+- `_` 匹配所有剩余情况（类似 default），必须放最后
+- `if let` 是只关心一种变体时的简写：`if let Message::Say(text) = msg { ... }`
+
 ## 遇到的坑
 
 - **Windows 链接器冲突**：Git 自带的 `link.exe` 被误认为 MSVC 链接器。解决：`rustup default stable-x86_64-pc-windows-gnu`
@@ -256,3 +321,4 @@ impl Student {
 | **表达式导向** | Rust 中几乎一切皆表达式，都能产出值。分号是"丢弃值"的开关 |
 | **编译器是老师** | Rust 编译器不只报错，还告诉你怎么改，认真读每条信息 |
 | **单一职责** | 每个函数只做一件事，修改就只修改，打印交给调用者 |
+| **让非法状态无法表达** | 用类型系统在编译期挡住错误组合，而不是运行时检查 |
