@@ -17,7 +17,9 @@
 - [x] 结构体（Struct）
 - [x] 枚举（Enum）
 - [x] 模式匹配（match）
-- [ ] 错误处理（Result / Option）——Option 已学完，Result 刚开头
+- [x] 错误处理（Result / Option）
+- [x] Vec 基础（创建、遍历、len）
+- [ ] String 与 &str 的区别
 
 ## Option
 
@@ -38,7 +40,7 @@ enum Option<T> {
 - 设计哲学：**把运行时错误提前到编译时解决**
 - Option 不能直接当值用（不能直接 println），必须拆开
 
-## Result（刚开始）
+## Result
 
 ```rust
 enum Result<T, E> {
@@ -48,7 +50,48 @@ enum Result<T, E> {
 ```
 
 - Option 是"有没有值"，Result 是"成功还是失败"
-- 下次从 `"42".parse()` 的例子继续
+- 三种拆法跟 Option 一样：
+
+```rust
+// 1. match —— 最安全，两种情况都处理
+match "42".parse::<i32>() {
+    Ok(num) => println!("成功: {}", num),
+    Err(e) => println!("失败: {}", e),
+}
+
+// 2. if let —— 只关心成功的情况
+if let Ok(num) = "42".parse::<i32>() {
+    println!("成功: {}", num);
+}
+
+// 3. .unwrap() —— 暴力拆，Err 就 panic，只在 100% 确定成功时用
+let num: i32 = "42".parse().unwrap();
+```
+
+- `?` 运算符：成功就拆出来继续，失败就 return Err 往上抛
+- `?` 只能用在返回 Result 的函数里
+
+```rust
+// ? 等价于这个 match
+let num = s.parse::<i32>()?;
+// 等价于：
+let num = match s.parse::<i32>() {
+    Ok(n) => n,
+    Err(e) => return Err(e),
+};
+```
+
+## Vec
+
+```rust
+let nums = vec![1, 2, 3];           // 用 vec! 宏创建
+let mut nums: Vec<i32> = Vec::new(); // 空的，可以 push
+```
+
+- Vec 是可变长度数组，相当于 JS 的数组
+- `[1, 2, 3]` 是固定长度数组，不能增删；日常用 Vec
+- `.len()` 返回 usize 类型，做运算可能需要 `as` 转换
+- `for item in &nums` 遍历，item 是引用
 
 ---
 
