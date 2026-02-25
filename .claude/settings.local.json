@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git -C /Users/chp/legend/to-rust log --oneline -10)"
+      "Bash(git -C /Users/chp/legend/to-rust log --oneline -10)",
+      "WebSearch"
     ]
   }
 }

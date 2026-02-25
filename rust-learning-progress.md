@@ -19,7 +19,8 @@
 - [x] 模式匹配（match）
 - [x] 错误处理（Result / Option）
 - [x] Vec 基础（创建、遍历、len）
-- [ ] String 与 &str 的区别
+- [x] String 与 &str 的区别（基础）
+- [ ] String 与 &str 互转（待练习：shout 函数）
 
 ## Option
 
@@ -341,6 +342,18 @@ match msg {
 - 匹配的同时取出变体内的数据（switch 做不到）
 - `_` 匹配所有剩余情况（类似 default），必须放最后
 - `if let` 是只关心一种变体时的简写：`if let Message::Say(text) = msg { ... }`
+- **模式永远在左边**：`if let Some(i) = expr`，左边是模板，右边是要拆的值
+- `if let` 是一个整体语法关键字，不是 JS 的 `if (a == b)` 条件判断；它是"尝试用模式拆值"，不是"比较"
+
+## String 与 &str
+
+- `&str`：字符串切片，借用，不可变，通常指向程序二进制或 String 内部
+- `String`：堆上分配，拥有所有权，可增长可修改
+- 函数参数只读用 `&str`，需要拥有用 `String`
+- `&String` 可以自动转成 `&str`（deref coercion），所以参数写 `&str` 两种都能接
+- 互转：`&String` → `&str` 加 `&` 就行（轻操作）；`&str` → `String` 用 `.to_string()` 或 `String::from()`（重操作，要分配堆内存）
+- 切片语法：`&s[0..n]`，0 可以省略写成 `&s[..n]`
+- 待完成任务：写 `shout(s: &str) -> String`，用 `s.to_uppercase()` 返回全大写
 
 ## 遇到的坑
 
